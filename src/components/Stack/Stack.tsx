@@ -1,100 +1,100 @@
+// React Imports
 import * as React from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+
+// Redux Imports
+import { addComponent } from '../../actions/componentsActions';
+import { connect } from "react-redux";
+
+// Bootstrap Imports
+import { Grid } from 'react-bootstrap';
+
+// Drag and Drop Imports
 import { DropTarget, ConnectDropTarget, DropTargetMonitor } from 'react-dnd'
-import { getComponentByType } from '../../utils/getComponentByType';
-// import FreeHTML from '../FreeHTML/FreeHTML'
 
 const dustbinTarget = {
-  drop(
-    props: IDustbinProps,
-    monitor: DropTargetMonitor,
-    component: React.Component | null
-  ) {
-    if (!component) {
-      return
+  drop(props: IDustbinProps, monitor: DropTargetMonitor, component: Stack | null) {
+    if (!component) return;
+    if(monitor.didDrop() && !props.greedy) return;
+
+    const item = monitor.getItem();
+    let newComponent: any = {
+      type: item.componentType,
+    };
+
+    if(item.componentType === "col"){
+      newComponent = {
+        type: item.componentType,
+        children: [
+          {
+            type: "stack",
+            id: 545648924,
+            children: []
+          },
+          {
+            type: "stack",
+            id: 545364894,
+            children: []
+          },
+          {
+            type: "stack",
+            id: 545644894,
+            children: []
+          },
+          {
+            type: "stack",
+            id: 545645894,
+            children: []
+          }
+        ]
+      }
     }
 
-    // props.onDrop(monitor.getItem())
-    const hasDroppedOnChild = monitor.didDrop()
-    if (hasDroppedOnChild && !props.greedy) {
-      return
+    if (props.principal) {
+      props.addComponent(newComponent, 0);
+    } else {
+      const stackId = props.id || 0;
+      props.addComponent(newComponent, stackId);
     }
-
-    component.setState( (prevState: IDustbinState) => ({
-      hasDropped: true,
-      hasDroppedOnChild,
-      lastItemDropped: monitor.getItem(),
-      children: prevState.children
-    }));
   }
 };
 
 export interface IDustbinProps {
+  id?: number
+  type?: string
+  properties?: any
+  principal: boolean
   greedy?: boolean
-  accepts: any[]
-  isOver?: boolean
-  isOverCurrent?: boolean
+  accepts: string[]
   connectDropTarget?: ConnectDropTarget
-};
-
-export interface IDustbinState {
-  children: string[]
-  hasDropped: boolean
-  hasDroppedOnChild: boolean
-  lastItemDropped: any
+  // Redux Props
+  addComponent: (component: any, stackId: number) => void
 };
 
 @DropTarget(
   (props: IDustbinProps) => props.accepts,
   dustbinTarget,
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    isOverCurrent: monitor.isOver({ shallow: true }),
+  (connector) => ({
+    connectDropTarget: connector.dropTarget(),
   })
 )
-class Stack extends React.Component<IDustbinProps, IDustbinState> {
-  constructor(props: IDustbinProps) {
-    super(props)
-    this.state = {
-      children: [],
-      hasDropped: false,
-      hasDroppedOnChild: false,
-      lastItemDropped: ""
-    }
-  };
-
+class Stack extends React.Component<IDustbinProps> {
   public render() {
     const {
-      // greedy,
-      // isOver,
-      // isOverCurrent,
       connectDropTarget,
-      // children
+      children
     } = this.props
-    const { lastItemDropped, hasDropped, hasDroppedOnChild } = this.state
-    // let backgroundColor = 'rgba(0, 0, 0, .5)'
-    // if (isOverCurrent || (isOver && greedy)) {
-    //  backgroundColor = 'darkgreen'
-    // }
 
     return (
       connectDropTarget &&
       connectDropTarget(
-        <span>
-          <Grid fluid={true} style={{ padding: "10px", borderStyle: "dashed", borderWidth: "2px", minHeight: "50px" }}>
-            <Row>
-              <Col xs={12}>
-                {hasDropped && (
-                    <span>{getComponentByType(lastItemDropped.type)} { hasDroppedOnChild && "onChild" }</span>
-                )}
-              </Col>
-            </Row>
+        <div>
+          <Grid fluid={true} style={{ padding: "10px", borderStyle: "dashed", borderWidth: "2px", minHeight: "200px" }}>
+            {children}
           </Grid>
-        </span>
+        </div>
       )
     );
   };
 };
 
-export default Stack;
+export default connect(null, { addComponent })(Stack);

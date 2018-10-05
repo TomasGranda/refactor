@@ -3,25 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
+    "immutability-helper": "^2.8.1",
     "react": "^16.5.2",
     "react-bootstrap": "^0.32.4",
     "react-dnd": "^5.0.0",
     "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "^16.5.2",
-    "react-scripts-ts": "2.17.0"
+    "react-redux": "^5.0.7",
+    "react-scripts-ts": "2.17.0",
+    "redux": "^4.0.0",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "build:clean": "cd build && mv static/js/*.js static/js/main.js && mv static/css/*.css static/css/main.css && mv static/js/*.js.map static/js/main.js.map && mv static/css/*.css.map static/css/main.css.map"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.11.0",
     "@types/react": "^16.4.14",
     "@types/react-bootstrap": "^0.32.14",
     "@types/react-dom": "^16.0.7",
+    "@types/react-redux": "^6.0.9",
+    "@types/redux": "^3.6.0",
+    "@types/redux-devtools-extension": "^2.13.2",
+    "@types/redux-thunk": "^2.1.0",
     "typescript": "^3.0.3"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

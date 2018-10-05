@@ -1,4 +1,5 @@
 export default {
 	BOX: "box",
-	FREEHTML: "freehtml"
+	FREEHTML: "freehtml",
+	STACK: "stack"
 }

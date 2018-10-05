@@ -1,15 +1,13 @@
 import * as React from 'react';
 
-import {
-	ConnectDragSource,
-	DragSource
-} from 'react-dnd'
+import { ConnectDragSource, DragSource } from 'react-dnd'
 
 const boxSource = {
 	beginDrag(props: IBoxProps) {
 		return {
 			name: props.name,
-			type: props.type
+			type: props.type,
+			componentType: props.componentType
 		};
 	}
 };
@@ -17,6 +15,8 @@ const boxSource = {
 export interface IBoxProps {
 	name: string
 	type: string
+	icon: string
+	componentType: string
 	connectDragSource?: ConnectDragSource
 	isDragging?: boolean
 	isDropped?: boolean
@@ -32,18 +32,18 @@ export interface IBoxProps {
 )
 class Box extends React.Component<IBoxProps> {
   public render() {
-    const { name, isDropped, isDragging, connectDragSource } = this.props;
+    const { icon, isDragging, connectDragSource } = this.props;
     const opacity = isDragging ? 0.4 : 1;
     
     return (
       connectDragSource &&
 			connectDragSource(
-				<div style={{ opacity }}>
-					{isDropped ? <s>{name}</s> : name}
-				</div>,
+				<div style={{ opacity, display: "inline-block", border: "solid 1px", margin: "5px" }}>
+					<img src={`data:image/png;base64,${icon}`} />
+				</div>
 			)
     );
-  }
-}
+  };
+};
 
 export default Box;
